@@ -1,3 +1,14 @@
+# プロジェクト
+- ECサイト-マルチログイン機能
+
+# URL設計、機能設計、テーブル設計
+https://docs.google.com/spreadsheets/d/1vr_T-o4SAoeCZhlhP8fwUSXqoYnT0VIR5LLuNy5HXK8/edit#gid=0
+
+# ER図
+https://drive.google.com/file/d/18sEk5LC-jJum-NU9JKNZibGRVX81aWE1/view
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
