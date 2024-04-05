@@ -1,0 +1,18 @@
++--------+----------+-------------------------------+-----------------------+---------------------------------------------------------------+----------------------------------------------+
+| Domain | Method   | URI                           | Name                  | Action                                                        | Middleware                                   |
++--------+----------+-------------------------------+-----------------------+---------------------------------------------------------------+----------------------------------------------+
+|        | GET|HEAD | /                             |                       | Closure                                                       | web                                          |
+|        | GET|HEAD | _debugbar/assets/javascript   | debugbar.assets.js    | Barryvdh\Debugbar\Controllers\AssetController@js              | Barryvdh\Debugbar\Middleware\DebugbarEnabled |
+|        |          |                               |                       |                                                               | Closure                                      |
+|        | GET|HEAD | _debugbar/assets/stylesheets  | debugbar.assets.css   | Barryvdh\Debugbar\Controllers\AssetController@css             | Barryvdh\Debugbar\Middleware\DebugbarEnabled |
+|        |          |                               |                       |                                                               | Closure                                      |
+|        | DELETE   | _debugbar/cache/{key}/{tags?} | debugbar.cache.delete | Barryvdh\Debugbar\Controllers\CacheController@delete          | Barryvdh\Debugbar\Middleware\DebugbarEnabled |
+|        |          |                               |                       |                                                               | Closure                                      |
+|        | GET|HEAD | _debugbar/clockwork/{id}      | debugbar.clockwork    | Barryvdh\Debugbar\Controllers\OpenHandlerController@clockwork | Barryvdh\Debugbar\Middleware\DebugbarEnabled |
+|        |          |                               |                       |                                                               | Closure                                      |
+|        | GET|HEAD | _debugbar/open                | debugbar.openhandler  | Barryvdh\Debugbar\Controllers\OpenHandlerController@handle    | Barryvdh\Debugbar\Middleware\DebugbarEnabled |
+|        |          |                               |                       |                                                               | Closure                                      |
+|        | GET|HEAD | api/user                      |                       | Closure                                                       | api                                          |
+|        |          |                               |                       |                                                               | App\Http\Middleware\Authenticate:sanctum     |
+|        | GET|HEAD | sanctum/csrf-cookie           |                       | Laravel\Sanctum\Http\Controllers\CsrfCookieController@show    | web                                          |
++--------+----------+-------------------------------+-----------------------+---------------------------------------------------------------+----------------------------------------------+
