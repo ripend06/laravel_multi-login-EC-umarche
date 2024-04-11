@@ -43,9 +43,46 @@ class LoginRequest extends FormRequest
      */
     public function authenticate()
     {
+
+    //config/auth.php内のファイル添付
+    // 'guards' => [
+    //     'web' => [
+    //         'driver' => 'session',
+    //         'provider' => 'users',
+    //     ],
+
+    //     //users
+    //     'users' => [
+    //         'driver' => 'session',
+    //         'provider' => 'users',
+    //     ],
+
+    //     //owners
+    //     'owners' => [
+    //         'driver' => 'session',
+    //         'provider' => 'owners',
+    //     ],
+
+    //     //admin
+    //     'admin' => [
+    //         'driver' => 'session',
+    //         'provider' => 'admin',
+    //     ],
+    // ],
+
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+
+        if($this->routeIs('owner.*')){ //オーナーのログインフォームからきたら、
+            $guard = 'owners'; //ガードの設定をownersに変える
+        } elseif($this->routeIs('admin.*')){
+            $guard = 'admin';
+        } else {
+            $guard = 'users';
+        }
+
+
+        if (! Auth::guard($guard)->attempt($this->only('email', 'password'), $this->boolean('remember'))) { //★guard($guard)->を追記
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'users', //デフォルトをuserに変更
         'passwords' => 'users',
     ],
 
@@ -40,6 +40,24 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        //users
+        'users' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        //owners
+        'owners' => [
+            'driver' => 'session',
+            'provider' => 'owners',
+        ],
+
+        //admin
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admin',
+        ],
     ],
 
     /*
@@ -60,9 +78,22 @@ return [
     */
 
     'providers' => [
+        //users
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\User::class, //作成したモデル名
+        ],
+
+        //owners
+        'owners' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Owner::class, //作成したモデル名
+        ],
+
+        //admin
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class, //作成したモデル名
         ],
 
         // 'users' => [
@@ -87,9 +118,27 @@ return [
     */
 
     'passwords' => [
+
+        //users
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        //owners
+        'owners' => [
+            'provider' => 'owners',
+            'table' => 'owner_password_resets', //マイグレーションファイル名
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        //admin
+        'admin' => [
+            'provider' => 'admin',
+            'table' => 'admin_password_resets', //マイグレーションファイル名
             'expire' => 60,
             'throttle' => 60,
         ],
