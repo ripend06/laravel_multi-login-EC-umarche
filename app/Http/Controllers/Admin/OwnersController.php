@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Owner; //Eloquent エロクアント
+use Illuminate\Support\Facades\DB; //QueryBilder クエリビルダ
+use Carbon\Carbon; //Carbrnインポート
 
 class OwnersController extends Controller
 {
@@ -24,8 +27,28 @@ class OwnersController extends Controller
 
     public function index()
     {
+        //カーボン設定
+        $date_now = Carbon::now();
+        $date_parse = Carbon::parse(now());
+        echo $date_now->year; //現在の日付・時間。yearで年だけ表示。
+        echo $date_parse."\n";
+
+        //Eloquent エロクアント
+        $e_all = Owner::all();
+        //QueryBilder クエリビルダ
+        $q_get = DB::table('owners')->select('name', 'created_at')->get();
+        //$q_first = DB::table('owners')->select('name')->first();
+        //Collection コレクション
+        // $c_test = collect([
+        //     'name' => 'てすと'
+        // ]);
+
+        //var_dump($q_first);
         //
-        dd('オーナー一覧です'); //確認のための記述
+        //dd('オーナー一覧です'); //確認のための記述
+        //dd($e_all, $q_get, $q_first, $c_test);
+
+        return view('admin.owners.index', compact('e_all', 'q_get'));
     }
 
     /**
