@@ -22,13 +22,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.welcome');
-});
+// Route::get('/', function () {
+//     return view('admin.welcome');
+// });
 
 //リソースコントローラー　Adminで認証していたら表示する
 Route::resource('owners', OwnersController::class)
-->middleware('auth:admin');
+->middleware('auth:admin')->except(['show']);
 
 //ソフトデリート
 Route::prefix('expired-owners')
