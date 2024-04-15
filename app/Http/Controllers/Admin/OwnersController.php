@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Owner; //Eloquent エロクアント
+use App\Models\Shop; //Shopトランザクション
 use Illuminate\Support\Facades\DB; //QueryBilder クエリビルダ
 use Carbon\Carbon; //Carbrnインポート
 use Illuminate\Support\Facades\Hash; //パスワードハッシュ（バリデーションで必要）
 use Illuminate\Validation\Rules; //必要ぽい
+use Throwable; //Shopトランザクション
+use Illuminate\Support\Facades\Log; //Shopトランザクション
 
 
 class OwnersController extends Controller
@@ -88,11 +91,28 @@ class OwnersController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        Owner::create([ //:Ownersに
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        //例外処理 Shopトランザクション
+        try{
+            DB::transaction(function() use($request) {
+                $owner = Owner::create([ //:Ownersに
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+
+                Shop::create([
+                    'owner_id' => $owner->id,
+                    'name' => '店名を入力してください',
+                    'information' => '',
+                    'filename' => '',
+                    'is_selling' => true
+                ]);
+            },2); //NG時２回試す
+        }catch(Throwable $e){
+            Log::error($e);
+            throw $e;
+        }
+
 
         return redirect()
         ->route('admin.owners.index') //オーナー一覧にリダイレクト
