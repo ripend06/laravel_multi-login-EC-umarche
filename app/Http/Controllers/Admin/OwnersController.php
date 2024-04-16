@@ -23,7 +23,9 @@ class OwnersController extends Controller
      */
 
 
-    //リソースコントローラーのミドルウェアを設定するたに必要
+    //リソースコントローラーのミドルウェアを設定するたに必要 
+    //※リソースコントローラー使ってなく直書きても、必要になってくる
+    //adminにログインしていたら実行する処理
     public function __construct()
     {
         $this->middleware('auth:admin');
