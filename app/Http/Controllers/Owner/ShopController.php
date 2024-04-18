@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
+use Illuminate\Support\Facades\Storage; //画像アップロードに必要
 
 class ShopController extends Controller
 {
@@ -59,13 +60,24 @@ class ShopController extends Controller
     {
         //EloquentモデルのメソッドのfindOrFail、findOrFail($id)でIDがあれば表示、なければ４０４
         //ddは、デバッグ用関数
-        dd(Shop::findOrFail($id));
+        //dd(Shop::findOrFail($id));
+
+        //Shopモデルから、idがあれば、取り出す
+        $shop = Shop::findOrfail($id);
+        //ownerフォルダ.shopsファイル.editブレード返す。Shopの変数も渡して
+        return view('owner.shops.edit', compact('shop'));
     }
 
     //Request $requestはどこからきた？
     //use Illuminate\Http\Request;で読み込んで使えるようにしてる
     public function update(Request $request, $id)
     {
+        $imageFile = $request->image; //一時保存　されてる画像を取得
+        if(!is_null($imageFile) && $imageFile->isValid() ){ //画像がnullじゃなかったら＋アップロードできてるかの条件
+            Storage::putFile('public/shops', $imageFile); //storage/public/shopsフォルダ内に、$imageFileを保存する
+        }
+
+        return redirect()->route('owner.shops.index'); //ownerフォルダ、shopsファイル、indexビューにリダイレクト
     }
 
 }
