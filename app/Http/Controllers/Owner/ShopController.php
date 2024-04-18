@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Storage; //画像アップロードに必要
+use InterventionImage; //InterventionImageライブラリで必要
 
 class ShopController extends Controller
 {
@@ -43,6 +44,7 @@ class ShopController extends Controller
 
     public function index()
     {
+        //phpinfo();
         //ログインしてるオーナーのIDが取得できる
         //Laravelファザードというシステム
         $ownerId = Auth::id(); // 認証されているid。IDが単数の場合有効
@@ -74,7 +76,18 @@ class ShopController extends Controller
     {
         $imageFile = $request->image; //一時保存　されてる画像を取得
         if(!is_null($imageFile) && $imageFile->isValid() ){ //画像がnullじゃなかったら＋アップロードできてるかの条件
-            Storage::putFile('public/shops', $imageFile); //storage/public/shopsフォルダ内に、$imageFileを保存する
+            //リサイズなしの場合
+            //Storage::putFile('public/shops', $imageFile); //storage/public/shopsフォルダ内に、$imageFileを保存する
+
+            //リサイズありの場合
+            $fileName = uniqid(rand().'_'); //ランダムの文字列を生成
+            $extension = $imageFile->extension(); //一次保存されてる画像の拡張子を取得
+            $fileNameToStore = $fileName. '.' . $extension; //ファイル名と拡張子をくっつけて
+
+            $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode(); //画像リサイズ処理
+            //dd($imageFile, $resizedImage); //型違いの確認
+
+            Storage::put('public/shops/' . $fileNameToStore,$resizedImage ); //第一引数：フォルダ名ファイル名。第二引数：リサイズしたがオズ
         }
 
         return redirect()->route('owner.shops.index'); //ownerフォルダ、shopsファイル、indexビューにリダイレクト
