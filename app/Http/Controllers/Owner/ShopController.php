@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Storage; //画像アップロードに必要
 use InterventionImage; //InterventionImageライブラリで必要
+use App\Http\Requests\UploadImageRequest; //フォームリクエストで必要
 
 class ShopController extends Controller
 {
@@ -72,7 +73,8 @@ class ShopController extends Controller
 
     //Request $requestはどこからきた？
     //use Illuminate\Http\Request;で読み込んで使えるようにしてる
-    public function update(Request $request, $id)
+    //public function update(Request $request, $id)
+    public function update(UploadImageRequest $request, $id) //フォームリクエストを利用するために、RequestをUploadImageRequestにする
     {
         $imageFile = $request->image; //一時保存　されてる画像を取得
         if(!is_null($imageFile) && $imageFile->isValid() ){ //画像がnullじゃなかったら＋アップロードできてるかの条件
