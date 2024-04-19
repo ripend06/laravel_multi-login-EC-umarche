@@ -10,6 +10,7 @@ use App\Http\Controllers\Owner\Auth\RegisteredUserController;
 use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 use App\Http\Controllers\Owner\ShopController;//shop indexメソッドの追加
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Owner\ImageController; //リソースコントローラで飛鳥
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,15 @@ Route::prefix('shops')
     Route::get('edit/{shop}',[ShopController::class, 'edit'])->name('shops.edit');
     Route::post('update/{shop}',[ShopController::class, 'update'])->name('shops.update');
 });
+
+
+//リソースコントローラーを使用する場合１行で記載すむ。　
+//ガード設定　ownersで認証していたら表示する
+//imagesというURIに対して、ImageControllerクラスのアクションをリソースコントローラーとしてルーティング
+//showアクションが除外
+Route::resource('images', ImageController::class)
+->middleware('auth:owners')->except(['show']);
+
 
 
 Route::get('/dashboard', function () {
