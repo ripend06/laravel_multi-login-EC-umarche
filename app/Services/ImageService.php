@@ -17,6 +17,7 @@ class ImageService
 
         $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode(); //画像リサイズ処理
 
+        //putメソッドは、ファイルの内容をディスクに保存するために使用します。
         Storage::put('public/'. $folderName . '/' . $fileNameToStore,$resizedImage ); //第一引数：フォルダ名ファイル名。第二引数：リサイズしたがオズ
 
 

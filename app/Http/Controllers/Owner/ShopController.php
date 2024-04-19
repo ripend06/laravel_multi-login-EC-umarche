@@ -77,12 +77,23 @@ class ShopController extends Controller
     //public function update(Request $request, $id)
     public function update(UploadImageRequest $request, $id) //フォームリクエストを利用するために、RequestをUploadImageRequestにする
     {
+
+        //フォームバリデーションは、UploadImageRequestで行ってる
+        //バリデーション
+        $request->validate([
+            'name' => ['required', 'string', 'max:50'], //必須、文字列、最大５０文字
+            'information' => ['required', 'string', 'max:1000'], //必須、文字列、最大１０００文字
+            'is_selling' => ['required'], //必須
+        ]);
+
+
+        //画像保存処理
         $imageFile = $request->image; //一時保存　されてる画像を取得
         if(!is_null($imageFile) && $imageFile->isValid() ){ //画像がnullじゃなかったら＋アップロードできてるかの条件
-            //リサイズなしの場合
+            //●リサイズなしの場合
             //Storage::putFile('public/shops', $imageFile); //storage/public/shopsフォルダ内に、$imageFileを保存する
 
-            //リサイズありの場合
+            //●リサイズありの場合
             // $fileName = uniqid(rand().'_'); //ランダムの文字列を生成
             // $extension = $imageFile->extension(); //一次保存されてる画像の拡張子を取得
             // $fileNameToStore = $fileName. '.' . $extension; //ファイル名と拡張子をくっつけて
@@ -90,13 +101,31 @@ class ShopController extends Controller
             // $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode(); //画像リサイズ処理
             // //dd($imageFile, $resizedImage); //型違いの確認
 
+            //putメソッドは、ファイルの内容をディスクに保存するために使用します。
             // Storage::put('public/shops/' . $fileNameToStore,$resizedImage ); //第一引数：フォルダ名ファイル名。第二引数：リサイズしたがオズ
 
-            //サービス切り離し
-            $fileNameToStore = ImageService::upload($imageFile, 'shops');
+            //●サービス切り離し
+            $fileNameToStore = ImageService::upload($imageFile, 'shops'); //画像名が返ってくる
         }
 
-        return redirect()->route('owner.shops.index'); //ownerフォルダ、shopsファイル、indexビューにリダイレクト
+
+        //アップデート
+        $shop = Shop::findorFail($id); //Shopモデルの対象のidがあれば取得
+        $shop->name = $request->name; //リクエストから受け取ったnameをshopのnameに入れてる
+        $shop->information = $request->information;
+        $shop->is_selling = $request->is_selling;
+        if(!is_null($imageFile) && $imageFile->isValid()){ //画像ファイルがある＋送信されている場合
+            $shop->filename = $fileNameToStore; //filenameにファイル名を保存
+        }
+
+        $shop->save(); //データベースに保存
+
+
+        //リダイレクト処理
+        return redirect()
+        ->route('owner.shops.index') //ownerフォルダ、shopsファイル、indexビューにリダイレクト
+        ->with(['message' => '店舗情報を更新しました。', //リダイレクト先に、フラッシュメッセージを追加　
+        'status' => 'info']); //messageとstatusという名前のセッション変数にそれぞれ値を設定
     }
 
 }

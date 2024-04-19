@@ -9,6 +9,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    {{ フラッシュメッセージ表示 flash-messageコンポーネント }}
+                    <x-flash-message status="session('status')" />
                     {{-- blade内では、@foreachでforeach使える --}}
                     {{-- ownerフォルダ.shopsファイル.editメソッド --}}
                     {{-- editには、idパラメータが必要 ['shop' => $shop->id] --}}
@@ -26,16 +28,9 @@
                                     @endif
                                     </div>
                                     {{-- $shop->name ショップ名を表示 --}}
+                                    {{-- コンポーネントにプロパティ属性を渡す :filename="$shop->filename"  --}}
                                     <div class="text-x1">{{ $shop->name}}</div>
-                                    <div>
-                                        {{-- $shop->filename 画像名前が、空じゃなかったらの条件 --}}
-                                        @if(empty($shop->filename))
-                                            <img src="{{ asset('images/no_image.jpg') }}">
-                                        @else
-                                            {{-- $shop->filename 画像名を表示 --}}
-                                            <img src="{{ asset('storage/shops/' . $shop->filename ) }}">
-                                        @endif
-                                    </div>
+                                    <x-shop-thumbnail :filename="$shop->filename" />
                                 </div>
                             </a>
                         </div>
