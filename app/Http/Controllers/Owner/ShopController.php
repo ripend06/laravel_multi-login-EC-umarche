@@ -9,6 +9,7 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\Storage; //画像アップロードに必要
 use InterventionImage; //InterventionImageライブラリで必要
 use App\Http\Requests\UploadImageRequest; //フォームリクエストで必要
+use App\Services\ImageService; //サービス切り離しで必要
 
 class ShopController extends Controller
 {
@@ -82,14 +83,17 @@ class ShopController extends Controller
             //Storage::putFile('public/shops', $imageFile); //storage/public/shopsフォルダ内に、$imageFileを保存する
 
             //リサイズありの場合
-            $fileName = uniqid(rand().'_'); //ランダムの文字列を生成
-            $extension = $imageFile->extension(); //一次保存されてる画像の拡張子を取得
-            $fileNameToStore = $fileName. '.' . $extension; //ファイル名と拡張子をくっつけて
+            // $fileName = uniqid(rand().'_'); //ランダムの文字列を生成
+            // $extension = $imageFile->extension(); //一次保存されてる画像の拡張子を取得
+            // $fileNameToStore = $fileName. '.' . $extension; //ファイル名と拡張子をくっつけて
 
-            $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode(); //画像リサイズ処理
-            //dd($imageFile, $resizedImage); //型違いの確認
+            // $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode(); //画像リサイズ処理
+            // //dd($imageFile, $resizedImage); //型違いの確認
 
-            Storage::put('public/shops/' . $fileNameToStore,$resizedImage ); //第一引数：フォルダ名ファイル名。第二引数：リサイズしたがオズ
+            // Storage::put('public/shops/' . $fileNameToStore,$resizedImage ); //第一引数：フォルダ名ファイル名。第二引数：リサイズしたがオズ
+
+            //サービス切り離し
+            $fileNameToStore = ImageService::upload($imageFile, 'shops');
         }
 
         return redirect()->route('owner.shops.index'); //ownerフォルダ、shopsファイル、indexビューにリダイレクト
