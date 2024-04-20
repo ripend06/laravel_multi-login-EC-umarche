@@ -109,16 +109,16 @@ class ImageController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+    // /**
+    //  * Display the specified resource.
+    //  *
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function show($id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -126,9 +126,18 @@ class ImageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //$idはどこからきた？
+    //リソースコントローラーで作ったルーティングの、/owner/images/{image}/edit　から、idが自動的にメソッドが渡される
     public function edit($id)
     {
-        //
+        //EloquentモデルのメソッドのfindOrFail、findOrFail($id)でIDがあれば表示、なければ４０４
+        //ddは、デバッグ用関数
+        //dd(Image::findOrFail($id));
+
+        //Imageモデルから、idがあれば、取り出す
+        $image = Image::findOrfail($id);
+        //ownerフォルダ.imagesファイル.editブレード返す。Imageの変数も渡して
+        return view('owner.images.edit', compact('image'));
     }
 
     /**
@@ -138,9 +147,32 @@ class ImageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //Request $requestはどこからきた？
+    //use Illuminate\Http\Request;で読み込んで使えるようにしてる
+    //public function update(Request $request, $id)
     public function update(Request $request, $id)
     {
-        //
+        //フォームバリデーションは、UploadImageRequestで行ってる
+        //バリデーション
+        $request->validate([
+            'title' => ['string', 'max:50'], //文字列、最大５０文字
+        ]);
+
+
+        //アップデート
+        $image = Image::findorFail($id); //Imageモデルの対象のidがあれば取得
+        $image->title = $request->title; //リクエストから受け取ったtitleをimageのtitileに入れてる
+
+        $image->save(); //データベースに保存
+
+
+         //リダイレクト処理
+        return redirect()
+        ->route('owner.images.index') //ownerフォルダ、imagesファイル、indexビューにリダイレクト
+        ->with(['message' => '画像情報を更新しました。', //リダイレクト先に、フラッシュメッセージを追加　
+        'status' => 'info']); //messageとstatusという名前のセッション変数にそれぞれ値を設定
+
+
     }
 
     /**
