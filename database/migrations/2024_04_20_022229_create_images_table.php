@@ -13,7 +13,8 @@ class CreateImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('images', function (Blueprint $table) {
+        //Schema::create()メソッドを使用することで、データベースに新しいテーブルを作成し、そのテーブルの構造を定義
+        Schema::create('images', function (Blueprint $table) { //、Schema::create()メソッドは、新しいテーブルを作成するために使用。テーブル名は、images
             $table->id();
             $table->foreignId('owner_id')
             ->constrained() //constrainedでFK（外部キー）を設定

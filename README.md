@@ -8,6 +8,23 @@ https://docs.google.com/spreadsheets/d/1vr_T-o4SAoeCZhlhP8fwUSXqoYnT0VIR5LLuNy5H
 https://drive.google.com/file/d/18sEk5LC-jJum-NU9JKNZibGRVX81aWE1/view
 
 
+## 概要
+## インストール方法
+## インストール後の実施事項
+
+画像のダミーデータは
+public/imagesフォルダ内に
+sample.jpg 〜 sample6.jpg として
+保存しています。
+
+php srtisan storage:link　で
+storageフォルダにリンク後、
+
+storage/app/public/productsフォルダ内に
+保存すると表示されます。
+(productsフォルダがない場合は作成してください。)
+
+
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
