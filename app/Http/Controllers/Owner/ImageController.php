@@ -8,6 +8,7 @@ use App\Models\Image; //単一ミドルウェアで使用
 use Illuminate\Support\Facades\Auth; //単一ミドルウェアで使用
 use App\Http\Requests\UploadImageRequest; //フォームリクエスト(バリデーション)で必要
 use App\Services\ImageService; //サービス切り離しで必要
+use Illuminate\Support\Facades\Storage; //画像削除に必要
 
 
 
@@ -183,6 +184,23 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //Storageにある画像を削除
+        $image = Image::findOrFail($id); //指定されたIDに一致するImageモデルのレコードをデータベースから取得。もし指定されたIDに一致するレコードが見つからない場合は、ModelNotFoundExceptionがスローされます
+        $filePath = 'public/products/' . $image->filename; //filePathを取得
+
+        if(Storage::exists($filePath)){ //exists() ファイパスがあったら
+            Storage::delete($filePath); //delete() 削除
+        }
+
+        //テーブルから削除
+        //dd('削除処理');
+        Image::findOrFail($id) // EloquentのfindOrFail()メソッドを使用して、指定されたIDに一致するImageモデルのレコードを取得
+        ->delete(); //取得したモデルインスタンスに対してdelete()メソッドを呼び出します。これにより、データベースからそのレコードが削除
+
+        return redirect()
+        ->route('owner.images.index')
+        ->with(['message' => '画像を削除しました。',
+        'status' => 'alert']);
     }
+
 }

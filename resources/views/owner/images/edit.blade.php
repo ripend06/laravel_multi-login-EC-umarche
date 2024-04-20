@@ -43,8 +43,28 @@
                             <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">更新する</button>
                         </div>
                     </form>
+                    {{-- 削除ボタン --}}
+                    {{-- deleteには、@method('delete')には必要 --}}
+                    <form id="delete_{{ $image->id }}" action="{{ route('owner.images.destroy', ['image' => $image->id ]) }}" method="post">
+                        @csrf
+                        @method('delete')
+                        {{-- data-id="{{ $image->id }}"属性は、削除対象の画像のIDを保持します。 --}}
+                        <div class="p-2 w-full flex justify-around mt-32">
+                            <a href="#" data-id="{{ $image->id}}" onclick="deletePost(this)" class="text-white bg-red-400 border-0 py-2 px-4 focus:outline-none hover:bg-red-500 rounded">削除する</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
+<script>
+    function deletePost(e) {
+        'use strict';
+        if (confirm('本当に削除してもいいですか?')) {
+            document.getElementById('delete_' + e.dataset.id).submit(); //。e.dataset.idは、削除ボタンのdata-id属性に格納されている削除対象の画像のIDを参照します
+        }
+    }
+</script>
+
 </x-app-layout>
