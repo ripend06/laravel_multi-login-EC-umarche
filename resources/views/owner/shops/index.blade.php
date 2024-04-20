@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    {{ フラッシュメッセージ表示 flash-messageコンポーネント }}
+                    {{-- フラッシュメッセージ表示 flash-messageコンポーネント --}}
                     <x-flash-message status="session('status')" />
                     {{-- blade内では、@foreachでforeach使える --}}
                     {{-- ownerフォルダ.shopsファイル.editメソッド --}}
@@ -30,7 +30,7 @@
                                     {{-- $shop->name ショップ名を表示 --}}
                                     {{-- コンポーネントにプロパティ属性を渡す :filename="$shop->filename"  --}}
                                     <div class="text-x1">{{ $shop->name}}</div>
-                                    <x-shop-thumbnail :filename="$shop->filename" />
+                                    <x-thumbnail :filename="$shop->filename" type="shops"/>
                                 </div>
                             </a>
                         </div>

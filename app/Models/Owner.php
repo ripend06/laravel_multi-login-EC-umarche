@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes; //ソフトデリート用に追加
 use App\Models\Shop; //リレーション用で追加
+use App\Models\Image; //リレーション用で追加
 
 
 
@@ -47,5 +48,11 @@ class Owner extends Authenticatable
     public function shop()
     {
         return $this->hasone(Shop::class);
+    }
+
+    //リレーション　一旦　Owner:Images （1:多）
+    public function image()
+    {
+        return $this->hsMany(Image::class);
     }
 }
