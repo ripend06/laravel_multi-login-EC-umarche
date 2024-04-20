@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Storage; //画像アップロードに必要
 use InterventionImage; //InterventionImageライブラリで必要
-use App\Http\Requests\UploadImageRequest; //フォームリクエストで必要
+use App\Http\Requests\UploadImageRequest; //フォームリクエスト（バリデーション）で必要
 use App\Services\ImageService; //サービス切り離しで必要
 
 class ShopController extends Controller

@@ -28,7 +28,13 @@ class UploadImageRequest extends FormRequest
             //image 画像である
             //mimes:jpg,jpeg,png jpgかpngである
             //max:2048　MAX２メガバイトまで
-            'image'=>'image|mimes:jpg,jpeg,png|max:2048',
+            'image' => 'image|mimes:jpg,jpeg,png|max:2048',
+
+            //ImageStoreメソッドで使用
+            //create.blade.phpの　name="files[][image]"　と同じ記述にする必要がある
+            //filesという名前の配列内の各要素に対して行う
+            //'files.*.image'は、「files配列内のすべての要素のimage属性」に対するバリデーションルールを指定
+            'files.*.image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 
