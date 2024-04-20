@@ -19,10 +19,10 @@ class ShopController extends Controller
     //コンストラクラのミドルウェアで、ログインしてるか確認するために必要
     public function __construct()
     {
-        //オーナーかどうかの判定ミドルウェア
+        //⭐オーナーかどうかの判定ミドルウェア
         $this->middleware('auth:owners');
 
-        //アクセスした際に、ログインしてるオーナーのShop情報が判定するミドルウェア
+        //⭐アクセスした際に、ログインしてるオーナーのShop情報が判定する単一ミドルウェア
         $this->middleware(function ($request, $next) {//$nextとは？　。$requestはミドルウェア関数内なので、Request　$requestは不要
             //dd($request); //$requestの中身確認
             //dd($request->route()); //$request->route()の中身確認
@@ -49,6 +49,7 @@ class ShopController extends Controller
         //phpinfo();
         //ログインしてるオーナーのIDが取得できる
         //Laravelファザードというシステム
+        //⭐ログインしているオーナーが所有する店舗の一覧を表示するためのデータが取得
         $ownerId = Auth::id(); // 認証されているid。IDが単数の場合有効
         //Eloquentメソッドで、shopモデルの、owner_idカラムから、$ownerIdに一致するレコードを検索
         //whereメソッドの第一引数は、検索条件のカラム名を指定します。第二引数は、そのカラムに対する条件を指定
@@ -104,7 +105,7 @@ class ShopController extends Controller
             //putメソッドは、ファイルの内容をディスクに保存するために使用します。
             // Storage::put('public/shops/' . $fileNameToStore,$resizedImage ); //第一引数：フォルダ名ファイル名。第二引数：リサイズしたがオズ
 
-            //●サービス切り離し
+            //⭐サービス切り離し
             $fileNameToStore = ImageService::upload($imageFile, 'shops'); //画像名が返ってくる
         }
 

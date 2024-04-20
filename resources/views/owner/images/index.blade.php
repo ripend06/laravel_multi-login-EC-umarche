@@ -18,19 +18,20 @@
                     {{-- ownerフォルダ.imagesファイル.editメソッド --}}
                     {{-- editには、idパラメータが必要 ['image' => $image->id] --}}
                     {{-- 'image'はキー --}}
-                    @foreach ($images as $image)
-                        <div class="w-1/4 p-4">
-                            <a href="{{ route('owner.image.edit', ['image' => $image->id]) }}">
-                                <div class="border rounded-md p-4">
-                                    <div class="mb-4">
-                                    {{-- $image->title 画像名を表示 --}}
-                                    {{-- コンポーネントにプロパティ属性を渡す :filename="$shop->filename"  --}}
-                                    <div class="text-x1">{{ $image->title}}</div>
-                                    <x-thumbnail :filename="$shop->filename" type="products"/>
-                                </div>
-                            </a>
-                        </div>
-                    @endforeach
+                    <div class="flex flex-wrap">
+                        @foreach ($images as $image)
+                            <div class="w-1/4 p-4">
+                                <a href="{{ route('owner.images.edit', ['image' => $image->id]) }}">
+                                    <div class="border rounded-md p-4">
+                                        {{-- $image->title 画像名を表示 --}}
+                                        {{-- コンポーネントにプロパティ属性を渡す :filename="$shop->filename"  --}}
+                                        <div class="text-x1">{{ $image->title}}</div>
+                                        <x-thumbnail :filename="$image->filename" type="products"/>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
                     {{-- ページネーション --}}
                     {{ $images->links(); }}
                 </div>

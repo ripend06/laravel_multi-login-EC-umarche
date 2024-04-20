@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Image; //単一ミドルウェアで使用
 use Illuminate\Support\Facades\Auth; //単一ミドルウェアで使用
 use App\Http\Requests\UploadImageRequest; //フォームリクエスト(バリデーション)で必要
+use App\Services\ImageService; //サービス切り離しで必要
+
 
 
 
@@ -20,7 +22,7 @@ class ImageController extends Controller
     //コンストラクラのミドルウェアで、ログインしてるか確認するために必要
     public function __construct()
     {
-        //オーナーかどうかの判定ミドルウェア
+        //⭐オーナーかどうかの判定ミドルウェア
         $this->middleware('auth:owners');
 
         //⭐アクセスした際に、ログインしてるオーナーのImage情報が判定する単一ミドルウェア
@@ -86,7 +88,25 @@ class ImageController extends Controller
      */
     public function store(UploadImageRequest $request)
     {
-        dd($request);
+        //dd($request); //確認
+        $imageFiles = $request->file('files'); //複数の画像を取得
+        if(!is_null($imageFiles)){ //imageFilesが空じゃなかったらの処理
+            foreach($imageFiles as $imageFile){ //foreachでひとつひとつ処理
+                //⭐サービス切り離し
+                $fileNameToStore = ImageService::upload($imageFile, 'products'); //画像名が返ってくる
+                Image::create([ //createメソッドで、連想配列にして保存
+                    'owner_id' => Auth::id(), //現在のオーナーID
+                    'filename' => $fileNameToStore //サービス切り離しで戻ってきた画像名
+                ]);
+            }
+        }
+
+        //リダイレクト処理
+        return redirect()
+        ->route('owner.images.index') //ownerフォルダ、imagesファイル、indexビューにリダイレクト
+        ->with(['message' => '画像登録を実施しました。', //リダイレクト先に、フラッシュメッセージを追加　
+        'status' => 'info']); //messageとstatusという名前のセッション変数にそれぞれ値を設定
+
     }
 
     /**
