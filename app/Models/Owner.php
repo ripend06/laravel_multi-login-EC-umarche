@@ -45,6 +45,7 @@ class Owner extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    //リレーション　owner:shop （1:1）
     public function shop()
     {
         return $this->hasone(Shop::class);

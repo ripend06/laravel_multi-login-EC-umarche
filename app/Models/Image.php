@@ -10,6 +10,7 @@ class Image extends Model
 {
     use HasFactory;
 
+    //❌疑問　titleがないのはなぜ？
     //Eloquentモデルの属性（カラム）を一括代入可能なものとして指定するために使用されます。
     //Imageモデルで使うカラム名を書く
     protected $fillable = [

@@ -11,6 +11,7 @@ use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 use App\Http\Controllers\Owner\ShopController;//shop indexメソッドの追加
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Owner\ImageController; //リソースコントローラで飛鳥
+use App\Http\Controllers\Owner\ProductController; //リソースコントローラで飛鳥
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,14 @@ Route::prefix('shops')
 //imagesというURIに対して、ImageControllerクラスのアクションをリソースコントローラーとしてルーティング
 //showアクションが除外
 Route::resource('images', ImageController::class)
+->middleware('auth:owners')->except(['show']);
+
+
+//リソースコントローラーを使用する場合１行で記載すむ。　
+//ガード設定　ownersで認証していたら表示する
+//productというURIに対して、ProductControllerクラスのアクションをリソースコントローラーとしてルーティング
+//showアクションが除外
+Route::resource('product', ProductController::class)
 ->middleware('auth:owners')->except(['show']);
 
 
