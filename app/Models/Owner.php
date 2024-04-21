@@ -53,6 +53,6 @@ class Owner extends Authenticatable
     //リレーション　一旦　Owner:Images （1:多）
     public function image()
     {
-        return $this->hsMany(Image::class);
+        return $this->hasMany(Image::class);
     }
 }

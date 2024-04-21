@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             OwnerSeeder::class, //オーナーシーダー
             ShopSeeder::class, //店舗シーダー
             ImageSeeder::class, //画像シーダー
+            CategorySeeder::class, //カテゴリシーダー
         ]);
     }
 }
