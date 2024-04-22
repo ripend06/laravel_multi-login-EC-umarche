@@ -51,7 +51,7 @@ Route::resource('images', ImageController::class)
 //ガード設定　ownersで認証していたら表示する
 //productというURIに対して、ProductControllerクラスのアクションをリソースコントローラーとしてルーティング
 //showアクションが除外
-Route::resource('product', ProductController::class)
+Route::resource('products', ProductController::class)
 ->middleware('auth:owners')->except(['show']);
 
 
