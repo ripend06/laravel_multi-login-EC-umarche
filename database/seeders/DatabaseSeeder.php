@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ImageSeeder::class, //画像シーダー
             CategorySeeder::class, //カテゴリシーダー
             ProductSeeder::class, //商品シーダー
+            StockSeeder::class, //在庫管理シーダー
         ]);
     }
 }
