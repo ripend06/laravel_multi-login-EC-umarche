@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Image; //単一ミドルウェアで使用
 use Illuminate\Support\Facades\Auth; //単一ミドルウェアで使用
 use App\Models\Product; //単一ミドルウェアで使用
-use App\Models\SecondaryCategory; //単一ミドルウェアで使用
+use App\Models\PrimaryCategory; //単一ミドルウェアで使用
+use App\Models\Shop; //単一ミドルウェアで使用
 use App\Models\Owner; //単一ミドルウェアで使用
 
 
@@ -72,7 +73,7 @@ class ProductController extends Controller
 
         return view('owner.products.index', //ownerフォルダ.productsファイル.indexビューへ
         compact('ownerInfo')); //proucts変数を渡す
-    
+
     }
 
     /**
@@ -80,9 +81,48 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create() //createメソッドを使ってユーザーが新しい商品を投稿を作成できるページを提供する
     {
-        //
+        //①owner_idというカラムが、現在ログインしているユーザーのID (Auth::id()) と等しい条件を指定し、
+            //where()メソッド
+            //第一引数: カラム名
+            //データベースのテーブルのカラム名を指定します。これは条件として使用されます。
+            //第二引数: 条件値
+            //第一引数で指定したカラムと比較される値を指定します。条件に合致するレコードが抽出されます。
+        //②selectメソッドで取得する列を指定し、
+        //③getメソッドで実際にデータを取得
+        $shops = Shop::where('owner_id', Auth::id()) //Auth::id()は現在ログインしているユーザーのIDを取得
+        ->select('id', 'name')
+        ->get();
+
+
+        //①owner_idというカラムが、現在ログインしているユーザーのID (Auth::id()) と等しい条件を指定し、
+        //②selectメソッドで取得する列を指定し、
+        //③orderByで、updated_atを降順で並び替えて、
+        //④getメソッドで実際にデータを取得
+        $images = Image::where('owner_id', Auth::id())
+        ->select('id', 'title', 'filename')
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+
+        //⭐ログインしてるownerが使ってるPrimaryCategoryモデルの各レコードに関連するsecondaryモデルのデータも取得される（N+1問題あり）
+        //Eloquent ORM（Laravelのデータベース操作ライブラリ）を使用して、PrimaryCategoryモデルの全てのレコードを取得しています。
+        //また、withメソッドを使って、PrimaryCategoryモデルと関連するsecondaryモデルのデータも同時に取得
+
+        //⭐N+1問題解決
+        //N+1問題を解決するためにEloquentのロード関係（Eager Loading）を使用
+        //PrimaryCategoryモデルに対してEager Loadingを行っています。これにより、PrimaryCategoryモデルのインスタンスを取得する際に、関連するsecondaryリレーションシップを事前にロードしておく
+        //具体的には、以下の関係がロードされます：
+            //secondary: PrimaryCategoryデルとsecondaryモデルの間のリレーションシップ
+        $categories = PrimaryCategory::with('secondary')
+        ->get();
+
+
+        //'shops', 'images', 'categories'の変数をownerフォルダ.poductフォルダ.createビューに渡す
+        return view('owner.products.create',
+            compact('shops', 'images', 'categories'));
+
     }
 
     /**
