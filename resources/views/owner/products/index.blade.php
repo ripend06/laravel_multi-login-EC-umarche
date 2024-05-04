@@ -27,8 +27,10 @@
                                     <div class="border rounded-md p-2 md:p-4">
                                         {{-- $product->title 画像名を表示 --}}
                                         {{-- コンポーネントにプロパティ属性を渡す。productに紐づいてるimaegFirstに紐づいてるfilenameを表示 :filename="$product->imaegFirst->filename"  --}}
-                                        <x-thumbnail :filename="$product->imageFirst->filename" type="products"/>
-                                        {{--<div class="text-gray-700">{{ $product->name}}</div>--}}
+                                        {{-- コンポーネントに文字列を渡すので：不要。 filename="{{$product->imageFirst->filename ?? ''}}"  imageFirst(image1)のfilenameがnullだったら空に。 --}}
+                                        {{-- <x-thumbnail :filename="$product->imageFirst->filename" type="products"/> --}}
+                                        <x-thumbnail filename="{{$product->imageFirst->filename ?? ''}}" type="products"/>
+                                        <div class="text-gray-700">{{ $product->name}}</div>
                                     </div>
                                 </a>
                             </div>

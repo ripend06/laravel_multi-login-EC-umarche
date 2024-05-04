@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Image; //単一ミドルウェアで使用
+use Illuminate\Support\Facades\DB; //QueryBilder クエリビルダ
 use Illuminate\Support\Facades\Auth; //単一ミドルウェアで使用
 use App\Models\Product; //単一ミドルウェアで使用
 use App\Models\PrimaryCategory; //単一ミドルウェアで使用
 use App\Models\Shop; //単一ミドルウェアで使用
 use App\Models\Owner; //単一ミドルウェアで使用
+use App\Models\Stock; //単一ミドルウェアで使用
 
 
 class ProductController extends Controller
@@ -133,7 +135,66 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        //dd($request);
+
+        //バリデーション
+        $request->validate([
+            'name' => ['required', 'string', 'max:50'],
+            'information' => ['required', 'string', 'max:1000'],
+            'price' => ['required', 'integer'],
+            'sort_order' => ['nullable', 'integer'], //nullable 空であってもバリデーションを通過
+            'quantity' => ['required', 'integer'],
+            //Laravelのバリデーションルールの一つで、指定されたデータベーステーブル内に特定の値が存在することを確認するために使用。
+            //shop_idフィールドの値がshopsテーブルのidカラムに存在することを確認
+            'shop_id' => ['required', 'exists:shops,id'],
+            //Laravelのバリデーションルールの一つで、指定されたデータベーステーブル内に特定の値が存在することを確認するために使用。
+            //shop_idフィールドの値がsecondary_categoriesテーブルのidカラムに存在することを確認
+            'category' => ['required', 'exists:secondary_categories,id'],
+            //Laravelのバリデーションルールの一つで、指定されたデータベーステーブル内に特定の値が存在することを確認するために使用。
+            //shop_idフィールドの値がimagesテーブルのidカラムに存在することを確認
+            'image1' => ['nullable', 'exists:images,id'],
+            'image2' => ['nullable', 'exists:images,id'],
+            'image3' => ['nullable', 'exists:images,id'],
+            'image4' => ['nullable', 'exists:images,id'],
+            'is_selling' => ['nullable'],
+        ]);
+
+        //例外処理 Productトランザクション
+        try{
+            DB::transaction(function() use($request) {
+                $product = Product::create([ //新しいPproductのレコードを追加
+                    'name' => $request->name,
+                    'information' => $request->information,
+                    'price' => $request->price,
+                    'sort_order' => $request->sort_order,
+                    'shop_id' => $request->shop_id,
+                    'secondary_category_id' => $request->category,
+                    'image1' => $request->image1,
+                    'image2' => $request->image2,
+                    'image3' => $request->image3,
+                    'image4' => $request->image4,
+                    'is_selling' => $request->is_selling,
+                ]);
+
+                Stock::create([ //新しいStockのレコードを追加
+                    'product_id' => $product->id,
+                    'type' => 1,
+                    'quantity' => $request->quantity,
+                ]);
+            },2); //NG時２回試す
+        }catch(Throwable $e){
+            Log::error($e);
+            throw $e;
+        }
+
+
+        return redirect()
+        ->route('owner.products.index') //商品一覧一覧にリダイレクト
+        //リダイレクト時にセッションにデータをフラッシュするために使用されます。
+        //このメソッドは、リダイレクト先のページに一時的なデータを渡す
+        //フラッシュメッセージ
+        ->with(['message' => '商品登録しました。',
+        'status' => 'info']);
     }
 
     /**

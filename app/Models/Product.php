@@ -14,6 +14,20 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = [ //fillableプロパティを使用することで、モデルに一括代入を許可する属性を明示的に指定
+        'shop_id',
+        'name',
+        'information',
+        'price',
+        'is_selling',
+        'sort_order',
+        'secondary_category_id',
+        'image1',
+        'image2',
+        'image3',
+        'image4',
+    ];
+
     //リレーション　product:shop （多:1）
     public function shop()
     {
