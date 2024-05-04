@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
             ShopSeeder::class, //店舗シーダー
             ImageSeeder::class, //画像シーダー
             CategorySeeder::class, //カテゴリシーダー
-            ProductSeeder::class, //商品シーダー
-            StockSeeder::class, //在庫管理シーダー
+            //ProductSeeder::class, //商品シーダー
+            //StockSeeder::class, //在庫管理シーダー
         ]);
     }
 }
