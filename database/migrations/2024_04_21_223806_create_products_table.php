@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name'); //string 短い文字列
             $table->text('information'); //text 長い文字列
-            $table->unsinedInterger('price'); //unsinedInterger プラスの整数値
+            $table->unsignedInteger('price'); //unsignedInteger プラスの整数値
             $table->boolean('is_selling'); //boolean 真偽値
             $table->integer('sort_order')->nullable(); //integer 整数
             $table->foreignId('shop_id')
